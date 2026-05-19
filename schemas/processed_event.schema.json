@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProcessedEvent",
+  "description": "B 镜像写入 processed_events Stream 的 JSON 格式",
+  "type": "object",
+  "required": [
+    "id",
+    "timestamp",
+    "label",
+    "wav_path",
+    "sample_rate",
+    "offset_sec",
+    "duration_sec",
+    "segment_index",
+    "nlu_model"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^nlu_\\d{8}_\\w+_\\d{6}$",
+      "description": "唯一标识，格式 nlu_YYYYMMDD_sessionId_NNNNNN"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 时间戳"
+    },
+    "label": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "NLU 提取的标签键值对，如 {\"天气\": \"晴\", \"道路\": \"高速\"}"
+    },
+    "wav_path": {
+      "type": "string",
+      "description": "音频文件路径"
+    },
+    "sample_rate": {
+      "type": "integer",
+      "description": "采样率 (Hz)"
+    },
+    "offset_sec": {
+      "type": "number",
+      "description": "片段起始偏移 (秒)"
+    },
+    "duration_sec": {
+      "type": "number",
+      "description": "片段时长 (秒)"
+    },
+    "segment_index": {
+      "type": "integer",
+      "description": "片段序号"
+    },
+    "nlu_model": {
+      "type": "string",
+      "description": "NLU 模型路径"
+    }
+  },
+  "additionalProperties": false
+}

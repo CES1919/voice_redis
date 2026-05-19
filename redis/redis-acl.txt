@@ -1,0 +1,5 @@
+user default off
+user redis_init on >__REDIS_PASS_INIT__ ~* +@all
+user service_a on >__REDIS_PASS_A__ %W~asr_events -@all +auth +ping +xadd
+user service_b on >__REDIS_PASS_B__ %R~asr_events %W~processed_events -@all +auth +ping +xgroup +xreadgroup +xack +xadd +xpending +xautoclaim +xinfo
+user ros2_reader on >__REDIS_PASS_ROS2__ %R~processed_events -@all +auth +ping +xgroup +xreadgroup +xack +xpending +xautoclaim +xinfo
