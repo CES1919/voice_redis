@@ -1,12 +1,6 @@
 user default off
 user healthcheck on >__REDIS_PASS_HEALTH__ resetchannels -@all +auth +ping
 user redis_init on >__REDIS_PASS_INIT__ ~* resetchannels +@all
-
-# A: 只允许向 asr_events 写入
 user service_a on >__REDIS_PASS_A__ ~asr_events resetchannels -@all +auth +ping +xadd
-
-# B: 读取 asr_events，写入 processed_events
 user service_b on >__REDIS_PASS_B__ ~asr_events ~processed_events resetchannels -@all +auth +ping +xgroup +xreadgroup +xack +xadd +xpending +xautoclaim +xinfo
-
-# ROS2: 只读取 processed_events
 user ros2_reader on >__REDIS_PASS_ROS2__ ~processed_events resetchannels -@all +auth +ping +xgroup +xreadgroup +xack +xpending +xautoclaim +xinfo
