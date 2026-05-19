@@ -5,6 +5,9 @@ services:
       dockerfile: Dockerfile
     image: voice-redis:latest
     container_name: redis-streams
+    networks:
+      - default
+      - shared-redis-net
     ports:
       - "127.0.0.1:6379:6379"
     environment:
@@ -31,3 +34,7 @@ services:
       redis:
         condition: service_healthy
     restart: "no"
+
+networks:
+  shared-redis-net:
+    external: true
