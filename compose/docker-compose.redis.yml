@@ -5,20 +5,16 @@ services:
       dockerfile: Dockerfile
     image: voice-redis:latest
     container_name: redis-streams
-    volumes:
-      - ../redis-data:/data
     ports:
       - "127.0.0.1:6379:6379"
     env_file:
       - ../.env
-    networks:
-      - shared-redis-net
     healthcheck:
-      test: ["CMD", "sh", "-c", "redis-cli --user healthcheck --pass \"$$REDIS_PASS_HEALTH\" ping 2>/dev/null || redis-cli ping 2>/dev/null"]
+      test: ["CMD", "redis-cli", "--user", "healthcheck", "--pass", "$$REDIS_PASS_HEALTH", "ping"]
       interval: 5s
       timeout: 3s
       retries: 10
-      start_period: 30s
+      start_period: 10s
     restart: unless-stopped
 
   redis-init:
@@ -27,14 +23,7 @@ services:
     entrypoint: ["/bin/sh", "/usr/local/bin/init_streams.sh"]
     env_file:
       - ../.env
-    networks:
-      - shared-redis-net
     depends_on:
       redis:
-        condition: service_started
+        condition: service_healthy
     restart: "no"
-
-networks:
-  shared-redis-net:
-    name: shared-redis-net
-    driver: bridge
